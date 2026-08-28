@@ -25,7 +25,7 @@ class Item extends Model
 
     public function menus()
     {
-       return $this->belongsToMany(Menu::class)->withTimestamps();
+       return $this->belongsToMany(Menu::class,'menu_item')->withTimestamps();
     }
 
     public function scopeActivo($query){

@@ -10,10 +10,10 @@ class ItemController extends Controller
 {
     //
     public function index(){
-       return Item::with('categoria','menu')->activo()->paginate(20);
+       return Item::with('categoria','menus')->activo()->paginate(20);
     }
 
-    
+
 
 
 

@@ -1,58 +1,141 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🍽️ La Buena Mesa - RESTful API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API RESTful desarrollada en **Laravel** para la gestión de sucursales, categorías, ítems (platillos/bebidas) y menús mediante relaciones muchos a muchos.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Requisitos Previos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Asegúrate de contar con los siguientes elementos en tu entorno local:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **PHP** >= 8.3 (con extensiones `pdo`, `sqlite3`, `mbstring` habilitadas)
+- **Composer** (Gestor de dependencias de PHP)
+- **Git**
+- Cliente para probar la API (**Postman**, **Insomnia**, o la extensión **Thunder Client** en VS Code)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🚀 Guía de Instalación Ejecución desde Cero
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Sigue detalladamente estos pasos para levantar el proyecto localmente.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 1. Clonar el repositorio e instalar dependencias
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clonar el repositorio
+git clone <https://github.com/Diego-OLA/LaBuenaMesaAPI-RESTful.git>
 
-php artisan boost:install
+# 2. Entrar a la carpeta del proyecto
+cd LaBuenaMesaAPI-RESTful
+
+# 3. Instalar dependencias de PHP
+composer install
+
+# Copiar el archivo de entorno de ejemplo
+cp .env.example .env
+
+# Generar la clave de la aplicación
+php artisan key:generate
+---
 ```
+### 2.Tablas y datos de prueba
+---
+```bash
+#Ejecutar las migraciones y los seeders
+php artisan migrate:fresh --seed
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+```
+Eso ejecutara las migraciones y insertara datos de items que son los platillos y bedidadas, tambien algunos menus,categorias y sucursales
 
-## Contributing
+### 3. Crear un Menú (`POST`)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Crea un nuevo menú asociándole múltiples platillos (ítems) a través de la tabla pivote.
 
-## Code of Conduct
+* **Método:** `POST`
+* **URL:** `http://127.0.0.1:8000/api/menu-items`
+* **Headers:**
+  ```http
+  Content-Type: application/json
+  Accept: application/json
+  ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Ejemplo de Cuerpo de la Petición (Body Raw JSON)
 
-## Security Vulnerabilities
+```json
+{
+  "nombre": "Menú Ejecutivo de Almuerzo",
+  "sucursal_id": 1,
+  "items": [1, 3, 5] 
+}
+```
+items son los platillos, usa los que la estan insertados con el seeder, puedes verlos haciendo get a la ruta  `http://127.0.0.1:8000/api/items`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+### 4. UPDATE Menu (`PUT`)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* **URL:** `http://127.0.0.1:8000/api/menu-items/3` 
+Debes colocar en la url el id del menu que quieres actualizar
+
+```json
+{
+  "nombre": "Menú Ejecutivo de Almuerzo",
+  "sucursal_id": 1,
+  "items": [1, 2, 5,6] 
+}
+```
+Al hacer esto veras que se actualizará el registro.
+De igual manera Si usas esa misma estructura en la URL pero usando Metodo GET obtendras el registro con el id que coloques en la URL
+
+---
+
+### 5. Estructura del Proyecto
+```text
+LaBuenaMesaAPI-RESTful/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── CategoriaController.php
+│   │   │   ├── ItemController.php
+│   │   │   ├── MenuController.php
+│   │   │   └── SucursalController.php
+│   │   └── Requests/
+│   │       └── MenuRequest.php
+|   |       |__ItemRequest.php
+│   └── Models/
+│       ├── Categoria.php
+│       ├── Item.php
+│       ├── Menu.php
+│       └── Sucursal.php
+│
+├── database/
+│   ├── factories/
+│   │   ├── CategoriaFactory.php
+│   │   ├── ItemFactory.php
+│   │   ├── MenuFactory.php
+│   │   └── SucursalFactory.php
+│   ├── migrations/
+│   │   ├── xxxx_xx_xx_xxxxxx_create_sucursales_table.php
+│   │   ├── xxxx_xx_xx_xxxxxx_create_categorias_table.php
+│   │   ├── xxxx_xx_xx_xxxxxx_create_items_table.php
+│   │   ├── xxxx_xx_xx_xxxxxx_create_menus_table.php
+│   │   └── xxxx_xx_xx_xxxxxx_create_menu_item_table.php  <-- Tabla Pivote
+│   ├── seeders/
+│   │   ├── CategoriaSeeder.php
+│   │   ├── DatabaseSeeder.php
+│   │   ├── ItemSeeder.php
+│   │   ├── MenuSeeder.php
+│   │   └── SucursalSeeder.php
+│   └── database.sqlite  <-- Base de Datos SQLite
+│
+├── routes/
+│   ├── api.php          <-- Rutas de la API (Route::apiResource)
+│   ├── channels.php
+│   ├── console.php
+│   └── web.php
+│
+├── .env                 <-- Configuración local (DB_CONNECTION=sqlite)
+├── .env.example
+├── composer.json
+└── README.md
+```
