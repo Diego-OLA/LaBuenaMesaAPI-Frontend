@@ -17,7 +17,7 @@ El dominio del negocio gira en torno a cuatro entidades relacionadas entre sí:
 
 ---
 
-## 📦 Estructura del repositorio (monorepo)
+## 📦 Estructura del repositorio
 
 ```text
 LaBuenaMesaAPI-RESTful/
