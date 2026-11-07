@@ -107,7 +107,7 @@ flowchart LR
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/Diego-OLA/LaBuenaMesaAPI-RESTful.git
+git clone https://github.com/Diego-OLA/LaBuenaMesaAPI-Frontend.git
 cd LaBuenaMesaAPI-RESTful
 
 # 2. Crear el archivo de variables de entorno
@@ -253,22 +253,7 @@ npm install
 npm run dev          # http://localhost:3000
 ```
 
----
 
-## 🧑‍💻 Ejecución local sin Docker (solo API)
-
-Requiere PHP 8.3+, Composer y un MySQL/MariaDB accesible.
-
-```bash
-cd api
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-php artisan serve    # http://127.0.0.1:8000
-```
-
----
 
 ## 🗄️ Conexión externa a MySQL
 
@@ -284,23 +269,5 @@ Para revisar la base con DBeaver, TablePlus o MySQL Workbench:
 
 Se usa el puerto **3307** para no chocar con un MySQL local (WAMP/XAMPP suelen ocupar el 3306).
 
----
 
-## 🩺 Solución de problemas
 
-| Síntoma | Causa probable | Solución |
-| --- | --- | --- |
-| `502 Bad Gateway` en `:8000` | PHP-FPM aún arrancando o migrando | `docker compose logs -f api` |
-| La web muestra error al cargar datos | La API no responde para el navegador | Comprueba `http://localhost:8000/api/items` y `NEXT_PUBLIC_API_URL` |
-| `Connection refused` a MySQL | El contenedor de MySQL no está *healthy* | `docker compose ps` y espera al healthcheck |
-| Cambios en el código no se reflejan | La imagen está cacheada | `docker compose up --build` |
-| Puerto ocupado (`8000`, `3000` o `3307`) | Otro proceso lo usa | Cambia el mapeo en `docker-compose.yml` |
-| Los seeders no vuelven a ejecutarse | Solo corren con la base vacía | `docker compose down -v && docker compose up --build` |
-
----
-
-## 🧰 Stack técnico
-
-**Backend:** Laravel 12 · PHP 8.4 · MySQL 8.4 · Laravel Sanctum · PHPUnit
-**Frontend:** Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · ESLint
-**Infraestructura:** Docker · Docker Compose · nginx · Alpine Linux
